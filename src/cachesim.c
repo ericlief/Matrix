@@ -163,9 +163,10 @@ static void cache_cleanup(void)
 {
   free(block_to_cache);
   free(cache_nodes);
-  printf("Accesses: %lld\n", cache_accesses);
-  printf("Misses: %lld\n", cache_misses);
-  printf("Missed-bytes: %lld\n", cache_misses * block_size);
+  // printf("Accesses: %lld\n", cache_accesses);
+  //printf("Misses: %lld\n", cache_misses);
+  //printf("Missed-bytes: %lld\n", cache_misses * block_size);
+  printf("%d,%lld,%lld,%lld",N,cache_accesses,cache_misses,cache_misses*block_size);
 }
 
 static int rd(int i, int j)
