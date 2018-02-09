@@ -12,15 +12,24 @@ public class Matrix {
     private int N;
     private static int CONST = 4;
 
+    /**
+     * Constructs a square nXn matrix
+     * 
+     * @param n
+     */
     public Matrix(int n) {
 	this.N = n;
-	//		Create nxn Matrix
+
+	// Create nxn Matrix
 	//	System.out.printf("Creating an %dx%d matrix\n", n, n);
 	System.out.printf("N %d\n", n);
 	A = new int[n][n];
 
     }
 
+    /**
+     * Initialize a matrix with random 32-bit integers.
+     */
     public void randInit() {
 	Random rand = new Random();
 	for (int i = 0; i < N; i++) {
@@ -29,6 +38,9 @@ public class Matrix {
 	}
     }
 
+    /**
+     * Initialize matrix with ordered integers starting at 1.
+     */
     public void ordInit() {
 	int x = 1;
 	for (int i = 0; i < N; i++) {
@@ -39,6 +51,9 @@ public class Matrix {
 	}
     }
 
+    /**
+     * Utility method to print matrix
+     */
     public void print() {
 	System.out.println();
 	for (int i = 0; i < N; i++) {
@@ -47,21 +62,23 @@ public class Matrix {
 	    System.out.println();
 	    System.out.println();
 	    System.out.println();
-
 	}
     }
 
+    /**
+     * Simple (sub-optimal) routine for transposing a matrix, used as a
+     * base-case for the COA below.
+     * 
+     * @param A
+     *            matrix
+     * @param m
+     *            first (x) coordinate of matrix
+     * @param n
+     *            first (y) coordinate of matrix
+     * @param N
+     *            size (if square nXn)
+     */
     public void transpose(int[][] A, int m, int n, int N) {
-	//	for (int i = 0; i < N - 1; i++) {
-	//	    for (int j = i + 1; j < N; j++) {
-	//		System.out.println("transposing " + A[i][j] + " with " + A[j][i]);
-	//		int tmp = A[i][j];
-	//		A[i][j] = A[j][i];
-	//		A[j][i] = tmp;
-	//		System.out.println();
-	//	    }
-	//	    
-	//	}
 
 	//	System.out.println("in transpose");
 	int endRow = m + N;
@@ -69,7 +86,7 @@ public class Matrix {
 	//	System.out.println("row end " + endRow + " " + "end col " + endCol);
 	for (int i = m; i < endRow - 1; i++) {
 	    for (int j = n + i - m + 1; j < endCol; j++) {
-		System.out.printf("X %d %d %d %d\n", i, j, j, i);
+//		System.out.printf("X %d %d %d %d\n", i, j, j, i);
 		int tmp = A[i][j];
 		A[i][j] = A[j][i];
 		A[j][i] = tmp;
@@ -78,44 +95,63 @@ public class Matrix {
 	}
     }
 
+    /**
+     * Cache oblivious algorithm (COA) for transposing a matrix, using
+     * recursion, until the matrix if of a constant size, here set to less than
+     * 4X4.
+     * 
+     * @param A
+     *            matrix
+     * @param m
+     *            first (x) coordinate of matrix
+     * @param n
+     *            first (y) coordinate of matrix
+     * @param N
+     *            size (if square nXn)
+     */
     public void transposeOnDiag(int[][] A, int m, int n, int N) {
 
 	//	System.out.printf("transpose on diag %dx%d @(%d,%d)\n", N, N, m, n);
+
+	// Less than constant, use simple transpose method
 	if (N < CONST) {
 	    //	    System.out.println(N + " less than " + CONST);
-	    //transpose(A);
 	    transpose(A, m, n, N);
-
 	}
 
+	// Use COA and transpose first across diagonal and then swap upper right 
+	// and lower right matrices using recursion
 	else {
 
-	    //	    if (N % 2 != 0) {
-	    //		
-	    //		
-	    //	    }
-	    //	    System.out.println(Math.ceil(N / 2));
 	    transposeOnDiag(A, m, n, N / 2);		// upper left submatrix
-	    //transposeOnDiag(A, m + (int) Math.ceil(N / 2.0), n + (int) Math.ceil(N / 2.0), (int) Math.ceil(N / 2.0));	// lower right submatrix
+
 	    transposeOnDiag(A, m + N / 2, n + N / 2, (int) Math.ceil(N / 2.0));	// lower right submatrix
 
-	    //	    swap(A, m, N / 2, N / 2, N / 2, n, N / 2);
-	    //	    swap(A, m, N / 2, N / 2, N / 2, n, N / 2);
-	    //int M = N / 2;
-	    //	    int rowA = 0; 	// first row pos for matrix A
-	    //	    int colA = N / 2; 	// first col pos for matrix A
-	    //	    int nRowsA = N / 2;
-	    //	    int nColsA = (int) Math.ceil(N / 2.0);
-	    transposeAndSwap(A, m, n + N / 2, N / 2, (int) Math.ceil(N / 2.0));
-	    // 			m    n     M		N
+	    transposeAndSwap(A, m, n + N / 2, N / 2, (int) Math.ceil(N / 2.0)); //swap upper right and lower left
+
 	}
     }
 
-    //    public void swap(int[][] A, int m, int n, int N, int r, int l, int L) {
-    //    public void transposeAndSwap(int[][] A, int rowA, int colA, int nRowsA, int nColsA, int rowB, int colB, int nRowsB, int nColsB)
+    /**
+     * swap upper right and lower right matrices using recursion
+     * 
+     * @param A
+     *            matrix
+     * @param m
+     *            first (x) coordinate of matrix
+     * @param n
+     *            first (y) coordinate of matrix
+     * @param N
+     *            size of vertical dimension (rows)
+     * @param M
+     *            size of horizontal dimention (columns)
+     */
     public void transposeAndSwap(int[][] A, int m, int n, int M, int N) {
+
 	//	System.out.printf("transpose and swap %dx%d @(%d,%d)\n", M, N, m, n);
-	//	if (nRowsA < CONST && nColsA < CONST && nRowsB < CONST && nColsB < CONST) {
+	System.out.println();
+
+	// Base case, below constant, use a simple swap routine
 	if (M < CONST && N < CONST) {
 	    //	    System.out.println("base swap");
 	    int endRow = m + M;
@@ -126,12 +162,13 @@ public class Matrix {
 		    int tmp = A[i][j];
 		    A[i][j] = A[j][i];
 		    A[j][i] = tmp;
-		    System.out.printf("X %d %d %d %d\n", i, j, j, i);
+//		    System.out.printf("X %d %d %d %d\n", i, j, j, i);
 
 		}
 	    }
 	}
 
+	// Recurse until base case for each of the four sub-matrices
 	else {
 
 	    transposeAndSwap(A, m, n, M / 2, (int) Math.ceil(N / 2.0));	// uper right submatrix
@@ -140,11 +177,10 @@ public class Matrix {
 	    transposeAndSwap(A, m + M / 2, n + (int) Math.ceil(N / 2.0), (int) Math.ceil(M / 2.0), N / 2);	// lower left submatrix
 
 	}
-
     }
 
     public static void main(String[] args) {
-	//System.out.println("starting");
+
 	int B = Integer.parseInt(args[0]);	// block size B
 	int C = Integer.parseInt(args[1]);	// cache size M
 	int runs = 0; 			// iterations to average over
@@ -155,53 +191,50 @@ public class Matrix {
 		StandardOpenOption.CREATE)) {
 
 	    // Iterate of increasing sizes N
-	    for (int k = 54; k<124 ; k++) {
+	    for (int k = 54; k < 124; k++) {
 		int n = (int) Math.pow(2, k / 9.0);	// size of matrix 
-		//System.out.println(n);
+
 		Matrix M = new Matrix(n);
 		M.randInit();			// init with random numbers
-		//M.transpose(M.A, 0, 0, n);
-		//	    System.out.println("E");
-		//	    M = new Matrix(69);
-		//	    M.randInit();
 
 		long startTime = 0; //= System.currentTimeMillis();
 
 		// Uncomment for cache simulator
-       		M.transpose(M.A, 0, 0, n);
-		// M.transposeOnDiag(M.A, 0, 0, n);
-      		System.out.println("E");
-		
+		M.transpose(M.A, 0, 0, n);		// for simple transpose
+		// M.transposeOnDiag(M.A, 0, 0, n);	// for COA
+		System.out.println("E");
+
 		// Uncomment to time and write normal tests
-		/*
-		if (n < 150)  // more runs for smaller N
-		    runs = 1000;
+		if (n < 150) // more runs for smaller N runs = 10000; 
+
+		    runs = 10000;
+
 		else
 		    runs = 100;// less runs for larger N
-		
-		// Ignore the first 10k iterations so as to allow the JVM to warm up
-		for (int t = -runs; t < runs; t++) {
-		    // Time transpose operation
-		    if (t == 0) 
-			startTime = System.nanoTime();
-		    //M.transposeOnDiag(M.A, 0, 0, n);
-		    M.transpose(M.A,0,0,n);
-		    
-		}
-		
-		long time = System.nanoTime() - startTime;
 
+		// Ignore the first 10k iterations so as to allow the JVM to warm up 
+		for (int t = -runs; t < runs; t++) {
+		    // Time transpose operation 
+
+		    if (t == 0)
+			startTime = System.nanoTime(); //M.transposeOnDiag(M.A, 0, 0, n);
+		    M.transpose(M.A, 0, 0, n);
+
+		}
+
+		long time = System.nanoTime() - startTime;
 		double aveTime = (double) time / (double) runs;
-		int nSwaps = (n*n-n)/2;  // number of pairs
+		int nSwaps = (n * n - n) / 2; // number of pairs 
 		double meanSwapTime = aveTime / nSwaps;
+
 		//System.out.println(n + " elap time  " + time);
 		//System.out.println("ave time " + aveTime);
 		//System.out.println("n swaps " +nSwaps);
 		//System.out.println("mean swap time " +meanSwapTime);
 
-		// Uncomment to write
-		//out.write(n + "," + aveTime + "," + meanSwapTime +  "\n");
-		*/		
+		// Uncomment to write 
+		out.write(n + "," + aveTime + "," + meanSwapTime + "\n");
+
 	    }
 	} catch (IOException e) {
 	    // TODO Auto-generated catch block
@@ -209,61 +242,3 @@ public class Matrix {
 	}
     }
 }
-
-//   HashMap<Integer,Integer> params = new HashMap<>(5);
-//
-//    for (param : params) {
-//	
-//    }
-//	String[] params = { "64, 64", "64, 1024", "64, 4096", "512, 512", "4096, 64" };
-//
-//	int B, C;	// block and cache sizes
-//	for (int i = 0; i < params.length; i++) {
-//	    String[] param = params[i].split(",");
-//	    B = Integer.parseInt(param[0]);
-//	    C = Integer.parseInt(param[1]);
-//	    String fout = "naive-" + B + "-" + C + ".csv";
-//	    Path pathOut = Paths.get(System.getProperty("user.home")).resolve("ds/" + fout);
-//	    try (BufferedWriter out = Files.newBufferedWriter(pathOut, StandardOpenOption.WRITE,
-//		    StandardOpenOption.WRITE)) {
-//
-//		//	    M.transpose(M.A, 0, 0, n);
-//
-//		//	    out.write(n + "," + aveSteps + "\n");
-//
-//		System.out.println("E");
-//
-//		for (int k = 54; k < 1000; k++) {
-//
-//		    final long startTime = System.currentTimeMillis();
-//
-//		    n = (int) Math.pow(2, k / 9.0);
-//		    //System.out.println(n);
-//		    M = new Matrix(n);
-//		    M.randInit();
-//		    //	    M.transpose(M.A, 0, 0, n);
-//		    //	    System.out.println("E");
-//		    //	    M = new Matrix(69);
-//		    //	    M.randInit();
-//
-//		    M.transposeOnDiag(M.A, 0, 0, n);
-//		    final long endTime = System.currentTimeMillis() - startTime;
-//		    out.write(n + "," + endTime);
-//		    
-//		    if (k == 60)
-//			break;
-//		}
-//	    } catch (IOException e) {
-//		// TODO Auto-generated catch block
-//		e.printStackTrace();
-//	    }
-
-//M.ordInit();
-
-//	M.print();
-//	M.transpose(M.A, 0, 0, n);
-//	M.print();
-//	M.transpose(M.A, 0, 0, n);
-//	M.print();
-//	M.transposeOnDiag(M.A, 0, 0, n);
-//	M.print();
