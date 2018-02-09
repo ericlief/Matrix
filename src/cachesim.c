@@ -66,7 +66,7 @@ static void matrix_init(void)
 {
   if (N < 4)
     error("Matrices smaller than 4x4 are not supported");
-  printf("Elements: %d\n", N*N);
+  //printf("Elements: %d\n", N*N);
 
   array = xmalloc(N*N*sizeof(int));
   for (int i=0; i<N; i++)
@@ -166,7 +166,8 @@ static void cache_cleanup(void)
   // printf("Accesses: %lld\n", cache_accesses);
   //printf("Misses: %lld\n", cache_misses);
   //printf("Missed-bytes: %lld\n", cache_misses * block_size);
-  printf("%d,%lld,%lld,%lld",N,cache_accesses,cache_misses,cache_misses*block_size);
+  printf("%d,%f", N, cache_misses/(N*N-n)/2.0);
+  //printf("%d,%lld,%lld,%lld",N,cache_accesses,cache_misses,cache_misses*block_size, cache_misses/(N*N-n)/2);
 }
 
 static int rd(int i, int j)
