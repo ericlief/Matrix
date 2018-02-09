@@ -149,8 +149,7 @@ public class Matrix {
     public void transposeAndSwap(int[][] A, int m, int n, int M, int N) {
 
 	//	System.out.printf("transpose and swap %dx%d @(%d,%d)\n", M, N, m, n);
-	System.out.println();
-
+	
 	// Base case, below constant, use a simple swap routine
 	if (M < CONST && N < CONST) {
 	    //	    System.out.println("base swap");
@@ -184,7 +183,7 @@ public class Matrix {
 	int B = Integer.parseInt(args[0]);	// block size B
 	int C = Integer.parseInt(args[1]);	// cache size M
 	int runs = 0; 			// iterations to average over
-	String fout = "sim-" + B + "-" + C + ".csv";
+	String fout = "normal-" + B + "-" + C + ".csv";
 	Path pathOut = Paths.get(System.getProperty("user.home")).resolve("code/ds/Matrix/output/" + fout);
 
 	try (BufferedWriter out = Files.newBufferedWriter(pathOut, StandardOpenOption.WRITE,
@@ -200,9 +199,9 @@ public class Matrix {
 		long startTime = 0; //= System.currentTimeMillis();
 
 		// Uncomment for cache simulator
-		M.transpose(M.A, 0, 0, n);		// for simple transpose
+		//M.transpose(M.A, 0, 0, n);		// for simple transpose
 		// M.transposeOnDiag(M.A, 0, 0, n);	// for COA
-		System.out.println("E");
+//		System.out.println("E");
 
 		// Uncomment to time and write normal tests
 		if (n < 150) // more runs for smaller N runs = 10000; 
