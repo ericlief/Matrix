@@ -86,7 +86,7 @@ public class Matrix {
 	//	System.out.println("row end " + endRow + " " + "end col " + endCol);
 	for (int i = m; i < endRow - 1; i++) {
 	    for (int j = n + i - m + 1; j < endCol; j++) {
-//		System.out.printf("X %d %d %d %d\n", i, j, j, i);
+		System.out.printf("X %d %d %d %d\n", i, j, j, i);
 		int tmp = A[i][j];
 		A[i][j] = A[j][i];
 		A[j][i] = tmp;
@@ -161,7 +161,7 @@ public class Matrix {
 		    int tmp = A[i][j];
 		    A[i][j] = A[j][i];
 		    A[j][i] = tmp;
-//		    System.out.printf("X %d %d %d %d\n", i, j, j, i);
+		    System.out.printf("X %d %d %d %d\n", i, j, j, i);
 
 		}
 	    }
@@ -183,13 +183,13 @@ public class Matrix {
 	int B = Integer.parseInt(args[0]);	// block size B
 	int C = Integer.parseInt(args[1]);	// cache size M
 	int runs = 0; 			// iterations to average over
-	String fout = "normal-" + B + "-" + C + ".csv";
+	String fout = "sim-naive-" + B + "-" + C + ".csv";
 	Path pathOut = Paths.get(System.getProperty("user.home")).resolve("code/ds/Matrix/output/" + fout);
 
 	try (BufferedWriter out = Files.newBufferedWriter(pathOut, StandardOpenOption.WRITE,
 		StandardOpenOption.CREATE)) {
 
-	    // Iterate of increasing sizes N
+	    // Iterate for increasing sizes N
 	    for (int k = 54; k < 124; k++) {
 		int n = (int) Math.pow(2, k / 9.0);	// size of matrix 
 
@@ -199,40 +199,42 @@ public class Matrix {
 		long startTime = 0; //= System.currentTimeMillis();
 
 		// Uncomment for cache simulator
-		//M.transpose(M.A, 0, 0, n);		// for simple transpose
-		// M.transposeOnDiag(M.A, 0, 0, n);	// for COA
-//		System.out.println("E");
+		M.transpose(M.A, 0, 0, n);		// for simple transpose
+		//M.transposeOnDiag(M.A, 0, 0, n);	// for COA
 
-		// Uncomment to time and write normal tests
-		if (n < 150) // more runs for smaller N runs = 10000; 
+		System.out.println("E");
 
-		    runs = 10000;
+		// // Uncomment to time and write normal tests
+		// if (n < 150) // more runs for smaller N runs = 10000; 
 
-		else
-		    runs = 100;// less runs for larger N
+		//     runs = 10000;
 
-		// Ignore the first 10k iterations so as to allow the JVM to warm up 
-		for (int t = -runs; t < runs; t++) {
-		    // Time transpose operation 
+		// else
+		//     runs = 100;// less runs for larger N
 
-		    if (t == 0)
-			startTime = System.nanoTime(); //M.transposeOnDiag(M.A, 0, 0, n);
-		    M.transpose(M.A, 0, 0, n);
+		// // Ignore the first 10k iterations so as to allow the JVM to warm up 
+		// for (int t = -runs; t < runs; t++) {
+		//     // Time transpose operation 
 
-		}
+		//     if (t == 0)
+		// 	startTime = System.nanoTime();
+		//     M.transposeOnDiag(M.A, 0, 0, n);
+		//     // M.transpose(M.A, 0, 0, n);
 
-		long time = System.nanoTime() - startTime;
-		double aveTime = (double) time / (double) runs;
-		int nSwaps = (n * n - n) / 2; // number of pairs 
-		double meanSwapTime = aveTime / nSwaps;
+		// }
 
-		//System.out.println(n + " elap time  " + time);
-		//System.out.println("ave time " + aveTime);
-		//System.out.println("n swaps " +nSwaps);
-		//System.out.println("mean swap time " +meanSwapTime);
+		// long time = System.nanoTime() - startTime;
+		// double aveTime = (double) time / (double) runs;
+		// int nSwaps = (n * n - n) / 2; // number of pairs 
+		// double meanSwapTime = aveTime / nSwaps;
 
-		// Uncomment to write 
-		out.write(n + "," + aveTime + "," + meanSwapTime + "\n");
+		// //System.out.println(n + " elap time  " + time);
+		// //System.out.println("ave time " + aveTime);
+		// //System.out.println("n swaps " +nSwaps);
+		// //System.out.println("mean swap time " +meanSwapTime);
+
+		// // Uncomment to write 
+		// out.write(n + "," + aveTime + "," + meanSwapTime + "\n");
 
 	    }
 	} catch (IOException e) {
