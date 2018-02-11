@@ -37,6 +37,8 @@ static void error(char *msg)
   exit(1);
 }
 
+// my changes
+
 static void *xmalloc(int size)
 {
   void *p = malloc(size);
