@@ -13,7 +13,7 @@ public class TestMatrixNaive {
 	int B = Integer.parseInt(args[0]);  // block size B
 	int C = Integer.parseInt(args[1]);  // cache size M
 	int runs = 0;           // iterations to average over
-	String fout = "normal-naive-" + B + "-" + C + ".csv";
+	String fout = "normal2-naive-" + B + "-" + C + ".csv";
 	Path pathOut = Paths.get(System.getProperty("user.home")).resolve("code/ds/Matrix/output/" + fout);
 
 	try (BufferedWriter out = Files.newBufferedWriter(pathOut, StandardOpenOption.WRITE,

@@ -4,7 +4,7 @@ public class Matrix {
 
     int[][] A;
     private int N;
-    private static int CONST = 4;
+    private static int CONST = 2;
 
     /**
      * Constructs a square nXn matrix
@@ -70,20 +70,34 @@ public class Matrix {
      * @param N
      *            size (if square nXn)
      */
+//    public void transpose(int[][] A, int m, int n, int N) {
+//
+//	int endRow = m + N;
+//	int endCol = n + N;
+//	for (int i = m; i < endRow - 1; i++) {
+//	    for (int j = n + i - m + 1; j < endCol; j++) {
+//		int tmp = A[i][j];
+//		A[i][j] = A[j][i];
+//		A[j][i] = tmp;
+//
+//	    }
+//	}
+//    }
+
+    
     public void transpose(int[][] A, int m, int n, int N) {
 
-	int endRow = m + N;
-	int endCol = n + N;
-	for (int i = m; i < endRow - 1; i++) {
-	    for (int j = n + i - m + 1; j < endCol; j++) {
-		int tmp = A[i][j];
-		A[i][j] = A[j][i];
-		A[j][i] = tmp;
+    	int endRow = m + N;
+    	int endCol = n + N;
+    	for (int i = m; i < endRow; i++) {
+    	    for (int j = n; j < endCol; j++) {
+    		int tmp = A[i][j];
+    		A[i][j] = A[j][i];
+    		A[j][i] = tmp;
 
-	    }
-	}
-    }
-
+    	    }
+    	}
+        }
     /**
      * Cache oblivious algorithm (COA) for transposing a matrix, using
      * recursion, until the matrix if of a constant size, here set to less than
